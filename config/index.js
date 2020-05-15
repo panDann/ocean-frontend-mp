@@ -13,7 +13,7 @@ const config = {
   sourceRoot: 'src',
   outputRoot: 'dist',
   babel: {
-    sourceMap: true,
+    // sourceMap: true,
     presets: [
       ['env', {
         modules: false

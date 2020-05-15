@@ -1,11 +1,9 @@
 import Taro, { Component, Config } from "@tarojs/taro";
-import { AtTabs, AtTabsPane, AtMessage } from "taro-ui";
-import { View } from "@tarojs/components";
-import NoData from "@src/pages/components/no-data";
-// import PageConfig from '@config/page.json'
+import { View,OpenData } from "@tarojs/components";
+import MButton from '@src/pages/components/btn'
+
 import "./index.styl";
 
-const phoneNumber = '13476828808'
 
 interface State {
   current1: number;
@@ -38,7 +36,7 @@ export default class Index extends Component<any, State> {
  
 
   config: Config = {
-    navigationBarTitleText: "首页",
+    navigationBarTitleText: "个人中心"
   };
 
   handleClick(current1) {
@@ -46,12 +44,23 @@ export default class Index extends Component<any, State> {
   }
 
   render() {
+    const tabList = [
+      { title: "航运拼箱" },
+      { title: "航运整箱" },
+      { title: "拖车" }
+    ];
+
     return (
       <View className="">
-        <NoData tip='暂时没有您的订单' />
-        <View className='btn-con'>
-         <View className='iconfont float-btn icondkw_tianxie' />
-          <View className='iconfont float-btn iconchat01' onClick={()=>Taro.makePhoneCall({phoneNumber})} />
+        <View className='userinfo-con flex-row justify-center'>
+          <View className='header'>
+          <OpenData  type='userAvatarUrl' />
+
+          </View>
+          <OpenData className='nickname' type='userNickName' />
+        </View>
+        <View className='fixed width100 bottom2rem'>
+          <MButton>登录</MButton>
         </View>
       </View>
     );

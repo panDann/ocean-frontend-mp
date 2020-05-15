@@ -1,0 +1,58 @@
+{
+  "id": "1723568",
+  "name": "安怀",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "499379",
+      "name": "chat_01",
+      "font_class": "chat01",
+      "unicode": "e64e",
+      "unicode_decimal": 58958
+    },
+    {
+      "icon_id": "2078813",
+      "name": "dkw_填写",
+      "font_class": "dkw_tianxie",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "2423300",
+      "name": "无数据",
+      "font_class": "wushuju",
+      "unicode": "e642",
+      "unicode_decimal": 58946
+    },
+    {
+      "icon_id": "4195141",
+      "name": "订单",
+      "font_class": "-query-corder",
+      "unicode": "e67c",
+      "unicode_decimal": 59004
+    },
+    {
+      "icon_id": "172701",
+      "name": "个人",
+      "font_class": "-tab-personal",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "398874",
+      "name": "订单",
+      "font_class": "-tab-order",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "677360",
+      "name": "首页",
+      "font_class": "-tab-first",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    }
+  ]
+}

@@ -1,5 +1,26 @@
-@import '~@src/styles/flex'
+@import '~@src/styles/variables'
 
-.box-img {
-    width: 60%    
+page {
+    background: $bodyBgColor;
 }
+
+$btnFontSize = 1.7rem
+.btn-con {
+    position fixed
+    bottom: 1rem 
+    right:  1rem
+    text-align: center
+    .float-btn {
+        display: block
+        height 2rem
+        width: 2rem
+        margin: .5rem
+        padding: .5rem;
+        background: #fff;
+        border-radius: 50%
+        box-shadow: 0 3px 10px -4px $primaryColor
+        line-height: 2rem
+        color $primaryColor
+        font-size: $btnFontSize
+        }
+    }

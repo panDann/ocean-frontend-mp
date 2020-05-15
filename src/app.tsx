@@ -1,6 +1,8 @@
 import Taro, { Component, Config } from "@tarojs/taro";
 import "./app.styl";
 import "@src/styles/app.scss";
+import "@src/assets/iconfont/iconfont.css";
+
 import { View } from "@tarojs/components";
 
 
@@ -37,27 +39,39 @@ class App extends Component {
     // pages: [
     //   ...Object.values(Paths)
     pages: [
-    
-      "pages/index/index", //货主首页
-
+      "pages/mine/index", 
+      "pages/location/index",
+      "pages/index/index", 
     ],
     window: {
       backgroundTextStyle: "light",
-      navigationBarBackgroundColor: "#fff",
-      navigationBarTitleText: "WeChat",
-      navigationBarTextStyle: "black"
+      navigationBarBackgroundColor: "#14d1b5",
+      navigationBarTitleText: "海洋",
+      navigationBarTextStyle: "white"
     },
 
     tabBar: {
-      color: "#cccccc",
-      custom: true,
-      selectedColor: "#3a8df3", //颜色
+      color: "#979797",
+      // custom: true,
+      selectedColor: "#14d1b5", //颜色
       list: [
         {
           pagePath: "pages/index/index",
-          text: "首页",
-          iconPath: "assets/tab-icon/first.png",
-          selectedIconPath: "assets/tab-icon/first-selected.png"
+          text: "订单",
+          iconPath: "assets/tab-icon/order.png",
+          selectedIconPath: "assets/tab-icon/order_selected.png"
+        },
+        {
+          pagePath: "pages/location/index",
+          text: "实体店",
+          iconPath: "assets/tab-icon/location.png",
+          selectedIconPath: "assets/tab-icon/location_selected.png"
+        },
+        {
+          pagePath: "pages/mine/index",
+          text: "我的",
+          iconPath: "assets/tab-icon/mine.png",
+          selectedIconPath: "assets/tab-icon/mine_selected.png"
         },
       ]
     },
