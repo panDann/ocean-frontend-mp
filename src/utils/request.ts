@@ -1,6 +1,6 @@
 import Taro from "@tarojs/taro";
 import { serverHost } from "@config/server";
-import { roleSelectPath } from "@src/consts/paths";
+// import { roleSelectPath } from "@src/consts/paths";
 
 interface CommonRes<T extends any> {
   message: string;

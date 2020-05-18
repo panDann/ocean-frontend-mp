@@ -1,4 +1,55 @@
+@import '~@src/styles/variables'
+@import '~@src/styles/flex'
 
-.box-img {
-    width: 60%    
-}
+$topFontSize = 1.5rem
+
+.card 
+    padding: 1rem
+    background: $cardBgColor
+    border-radius: $cardRaduis
+    box-shadow: $cardBoxShadow
+    margin-bottom: 1rem
+.order-name
+    font-size $topFontSize
+    letter-spacing: 1px
+    position relative
+    padding-left: .5rem
+    color: $primaryColor
+
+.order-name::before
+    content ''
+    position absolute
+    top: 15%
+    left 0
+    bottom: 0
+    width .2rem 
+    height 50%
+    margin: auto 
+    background: $primaryColor
+.order-status
+    font-size $topFontSize
+.order-status-repairing
+    color $lightBlue
+.order-status-success
+    color $successColor
+    
+.order-img
+    width: 3rem
+    height 3rem
+    border-radius: .2rem 
+.order-price 
+    color $lightOrange 
+    font-size: 3rem
+.order-unit
+    font-size: 1rem
+.order-time
+    font-size: 1rem
+    color: $cardTipFontColor
+// .order-operator
+.bottom 
+    margin-top: .5rem
+.bottom-line 
+    padding-bottom: .5rem
+    border-bottom: $bottomLine
+.padding1rem 
+    padding: 1rem

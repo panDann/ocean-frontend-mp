@@ -4,6 +4,7 @@ import "@src/styles/app.scss";
 import "@src/assets/iconfont/iconfont.css";
 
 import { View } from "@tarojs/components";
+import* as Paths from "@src/consts/paths";
 
 
 // import Paths from '@src/consts/paths'
@@ -17,7 +18,7 @@ class App extends Component {
   // componentDidMount () {}
 
   componentDidShow() {
-    // this.redirct(Paths.);
+    this.redirct(Paths.indexPath);
     // this.init()
   }
 
@@ -39,9 +40,9 @@ class App extends Component {
     // pages: [
     //   ...Object.values(Paths)
     pages: [
+      "pages/index/index", 
       "pages/mine/index", 
       "pages/location/index",
-      "pages/index/index", 
     ],
     window: {
       backgroundTextStyle: "light",

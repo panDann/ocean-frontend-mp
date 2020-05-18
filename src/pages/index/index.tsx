@@ -1,15 +1,15 @@
 import Taro, { Component, Config } from "@tarojs/taro";
-import { AtTabs, AtTabsPane, AtMessage } from "taro-ui";
-import { View } from "@tarojs/components";
+import { View,Text } from "@tarojs/components";
+import OrderCard from '@src/pages/components/order-card'
 import NoData from "@src/pages/components/no-data";
-// import PageConfig from '@config/page.json'
 import "./index.styl";
+import NoDataPath from '@src/assets/images/no-data.png'
 
 const phoneNumber = '13476828808'
 
 interface State {
   current1: number;
-  listData: [{ id: string }];
+  listData: any[];
   origin: string;
   destination: string;
   searchOrigin: string;
@@ -21,7 +21,14 @@ export default class Index extends Component<any, State> {
     super();
     this.state = {
       current1: 0,
-      listData: [{ id: "" }],
+      listData: [
+        {
+          name: 'test',
+          status: 0,
+          img: NoDataPath,
+          price: 12,
+          time: '2019-09-03 19:00',}
+      ],
       origin: "",
       destination: "",
       searchOrigin: "",
@@ -46,12 +53,16 @@ export default class Index extends Component<any, State> {
   }
 
   render() {
+    const {listData} = this.state
     return (
-      <View className="">
-        <NoData tip='暂时没有您的订单' />
+      <View className="padding1rem">
+        {
+              listData.map(el => <OrderCard item={el} operator={this.handleClick} />)
+        }
+        {!listData.length&&<NoData tip='暂时没有您的订单' />}
         <View className='btn-con'>
-         <View className='iconfont float-btn icondkw_tianxie' />
-          <View className='iconfont float-btn iconchat01' onClick={()=>Taro.makePhoneCall({phoneNumber})} />
+         <View className='iconfont tran-scale float-btn icondkw_tianxie' />
+          <View className='iconfont tran-scale float-btn iconphone' onClick={()=>Taro.makePhoneCall({phoneNumber})} />
         </View>
       </View>
     );
