@@ -19,18 +19,18 @@ const interceptor = function(chain) {
   requestParams.url = serverHost + url; //拼接host
 
   return chain.proceed(requestParams).then(res => {
-    if (
-      res.data &&
-      res.data.message &&
-      res.data.message.indexOf("当前用户") != -1
-    ) {
-      Taro.atMessage({
-        message: res.data.message,
-        type: "error"
-      });
-      Taro.clearStorageSync();
-      Taro.navigateTo({ url: roleSelectPath });
-    }
+    // if (
+    //   res.data &&
+    //   res.data.message &&
+    //   res.data.message.indexOf("当前用户") != -1
+    // ) {
+    //   Taro.atMessage({
+    //     message: res.data.message,
+    //     type: "error"
+    //   });
+    //   Taro.clearStorageSync();
+    //   // Taro.navigateTo({ url: roleSelectPath });
+    // }
     return res;
   });
 };
@@ -40,6 +40,9 @@ Taro.addInterceptor(interceptor);
 function reuqest<T>(param: any) {
   return Taro.request<CommonRes<T>>({
     method: "POST", //默认请求方式
+    header:{
+      "Content-Type":'application/x-www-form-urlencoded'
+    },
     ...param
   });
 }

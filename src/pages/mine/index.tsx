@@ -1,6 +1,7 @@
 import Taro, { Component, Config } from "@tarojs/taro";
-import { View,OpenData,Text } from "@tarojs/components";
+import { View,OpenData,Text, Button } from "@tarojs/components";
 import MButton from '@src/pages/components/btn'
+import {login} from '@src/api/logins'
 
 import "./index.styl";
 
@@ -35,7 +36,7 @@ export default class Index extends Component<any, State> {
     this.state = {
       current1: 0,
       listData: [{ id: "" }],
-   
+      isAuthUserInfo:false,
     };
   }
 
@@ -45,14 +46,26 @@ export default class Index extends Component<any, State> {
   componentDidMount() {
   }
 
- 
+  async componentWillMount() {
+    const {authSetting} = await Taro.getSetting()
+    if(!authSetting['scope.userInfo']){
+    }
+  }
 
   config: Config = {
     navigationBarTitleText: "个人中心"
   };
 
-  handleClick(current1) {
- 
+  async handleLogin({detail:{rawData, signature, encryptedData, iv,}}) {
+
+    const {code} = await Taro.login()
+    if(code) {
+     const res  = await login({code,rawData, signature, encryptedData, iv,})
+     return
+    }
+
+    Taro.showToast({title:'鉴权失败'})
+    return 
   }
 
   render() {
@@ -60,9 +73,7 @@ export default class Index extends Component<any, State> {
     return (
       <View className="">
         <View className='userinfo-con flex-row justify-center'>
-          <View className='header tran-scale'>
-          <OpenData  type='userAvatarUrl' />
-          </View>
+          <OpenData className='header tran-scale'  type='userAvatarUrl' />
           <OpenData className='nickname' type='userNickName' />
         </View>
         {
@@ -72,11 +83,10 @@ export default class Index extends Component<any, State> {
            <Text className='mine-item-label'>{el.label}</Text>
           </View>
           <Text className='iconfont icon iconarrow-right'/>
-
         </View> )
         }
         <View className='fixed width100 bottom2rem'>
-          <MButton>登录</MButton>
+            <Button openType='getUserInfo' onGetUserInfo={this.handleLogin}  className='primary-btn btn active'>登录</Button>
         </View>
       </View>
     );
