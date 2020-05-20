@@ -1,50 +1,72 @@
 import Taro from "@tarojs/taro";
 import { serverHost } from "@config/server";
-// import { roleSelectPath } from "@src/consts/paths";
+import { userToken } from "@src/consts/localStorage-variables";
+import { resCodes } from "@src/consts/constants";
+import { minePath } from "@src/consts/paths";
 
 interface CommonRes<T extends any> {
   message: string;
   data: T;
-  code: string;
+  code: number;
   extStr?: null;
   systemDate?: string;
   totalCount?: number;
 }
 
+  
+  const $toast =(title='')=> Taro.showToast({title,icon:'none'})
+
 // 拦截器 可以进行权限校验 错误码校验
 const interceptor = function(chain) {
-  const requestParams = chain.requestParams;
-  const { url } = requestParams;
 
+
+  const requestParams = chain.requestParams;
+  const { url,data:{loadingContent=''} } = requestParams;
+
+  Taro.showLoading({title:loadingContent||'加载中'})
   requestParams.url = serverHost + url; //拼接host
 
-  return chain.proceed(requestParams).then(res => {
-    // if (
-    //   res.data &&
-    //   res.data.message &&
-    //   res.data.message.indexOf("当前用户") != -1
-    // ) {
-    //   Taro.atMessage({
-    //     message: res.data.message,
-    //     type: "error"
-    //   });
-    //   Taro.clearStorageSync();
-    //   // Taro.navigateTo({ url: roleSelectPath });
-    // }
-    return res;
-  });
+  return chain.proceed(requestParams).then((res) => {
+    let {data:{code,message}} = res
+
+    Taro.hideLoading()
+    switch (code) {
+      case resCodes.success: 
+          return res
+
+      case resCodes.loginOverdue: 
+          Taro.setStorageSync(userToken,'')
+           $toast(message)
+          Taro.switchTab({url:minePath})
+
+      default:$toast(message)
+    }
+    
+    // Taro.hideLoading()
+    return false;
+  })
+ 
 };
 
 Taro.addInterceptor(interceptor);
 
-function reuqest<T>(param: any) {
+function reuqest<T>(param: any)  {
+  console.log('token',Taro.getStorageSync(userToken));
+  
   return Taro.request<CommonRes<T>>({
     method: "POST", //默认请求方式
     header:{
-      "Content-Type":'application/x-www-form-urlencoded'
+      "Content-Type":'application/x-www-form-urlencoded',
+      token:Taro.getStorageSync(userToken)||''
     },
+    fail,
     ...param
-  });
+  })
+}
+
+function fail(){
+  Taro.hideLoading()      
+  $toast('连结服务器出错')
 }
 
 export default reuqest;

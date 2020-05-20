@@ -49,7 +49,9 @@ export default class Index extends Component<any, State> {
 
 
   config: Config = {
-    navigationBarTitleText: "个人中心"
+    navigationBarTitleText: "个人中心",
+    // show:false
+    navigationStyle:'custom'
   };
 
   async goToDestinatio() {

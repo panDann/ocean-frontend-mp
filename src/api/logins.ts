@@ -1,14 +1,27 @@
 import Request from "@src/utils/request";
-import Taro from "@tarojs/taro";
-import { loginOwner } from "@src/consts/localStorage-variables";
+
+export interface ILogin {
+  token:string
+  username:string
+  role:string
+}
+
 
 let base = '/ocean-mp/user'
 export const login = param => {
-  return Request<any>({
+  return Request<ILogin>({
     url: base+"/login",
     data: param,
   });
 };
+
+export const logout = (param) => {
+  return Request({
+    url: base+"/logout",
+    data: param,
+  });
+};
+
 
 export const ownerRegister = param => {
   return Request<any>({
