@@ -23,10 +23,10 @@ export const logout = (param) => {
 };
 
 
-export const ownerRegister = param => {
-  return Request<any>({
-    url: "/system/userLoginRest/registerOfConsignor",
-    data: param,
-  });
-};
+// export const ownerRegister = param => {
+//   return Request<any>({
+//     url: "/system/userLoginRest/registerOfConsignor",
+//     data: param,
+//   });
+// };
 

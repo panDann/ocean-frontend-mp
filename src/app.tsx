@@ -40,8 +40,8 @@ class App extends Component {
     // pages: [
     //   ...Object.values(Paths)
     pages: [
-      "pages/mine/index", 
       "pages/index/index", 
+      "pages/mine/index", 
       "pages/location/index",
     ],
     window: {

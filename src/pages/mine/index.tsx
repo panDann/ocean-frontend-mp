@@ -89,7 +89,7 @@ export default class Index extends Component<any, State> {
           <OpenData className='nickname' type='userNickName' />
         </View>
         {
-          hasLogined && list.map(el => <View className='mine-item bottom-line flex-row align-center active justify-between'>
+          hasLogined && list.map(el => <View className='mine-item bottom-line flex-row align-center active tran-scale justify-between'>
             <View>
               <Text className={'iconfont icon ' + el.icon} />
               <Text className='mine-item-label'>{el.label}</Text>

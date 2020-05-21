@@ -6,6 +6,7 @@
 @import './btn';
 @import './wx-components';
 
+$imgStandardSize = 5rem
 .radio-size {
     font-size: 10px
     }
@@ -23,10 +24,12 @@
     padding: .5rem 1rem
     margin: .3rem 0
     }
+
+
 .image {
-    height 3rem
-    width:  3rem
-    // background: $lightGrey
+    height $imgStandardSize
+    width:  $imgStandardSize
+    border-radius: .1rem
     }
 .hidden {
     visibility hidden
@@ -37,21 +40,27 @@
      margin-bottom 3rem
 
     }
-.width30 {
-    width: 30%
-    }
-.width50 {
-    width: 50%
-    }
-.width80 {
-    width: 80%
-    }
-.width100 {
-    width: 100%
-    }
+
 .bottom-line 
     padding-bottom: .5rem
     border-bottom: $bottomLine
 .active:active {
     opacity .7
+    }
+.form-input {
+    padding: .3rem 0
+    color: #666
+    text-align: left 
+    }
+.form-input:placeholder{
+    color: $lightGrey
+    }
+.add-img {
+    height $imgStandardSize
+    width:  $imgStandardSize
+    line-height: $imgStandardSize
+    font-size: 1.5rem
+    border: solid 1px $lightGrey
+    border-radius: .1rem
+    color: $lightGrey
     }
