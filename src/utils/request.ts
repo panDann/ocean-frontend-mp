@@ -21,7 +21,7 @@ const interceptor = function(chain) {
 
 
   const requestParams = chain.requestParams;
-  const { url,data:{loadingContent=''} } = requestParams;
+  const { url,loadingContent=''} = requestParams;
 
   Taro.showLoading({title:loadingContent||'加载中'})
   requestParams.url = serverHost + url; //拼接host

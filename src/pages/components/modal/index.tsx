@@ -36,7 +36,6 @@ export default class Modal extends Taro.Component<Prop, State>{
   }
   render() {
     const { title = '标题', width = '', height = '',onConfirm, children, visible, onCancel } = this.props
-    console.log('v', visible);
 
     return (visible) && (
       <View className='fixed-mask' onClick={this.stopBubble} onTouchMove={this.stopBubble}>

@@ -12,14 +12,16 @@ export interface ILogin {
 
 
 let base = '/ocean-mp/user-order'
-export const getOrders = param => {
-    return Request<ILogin>({
-        url: base + "/query",
-        data: param,
+export const getOrders = (page=1,limit=10) => {
+    return Request({
+        url: base + `/query?page=${page}&limit=${limit}`,
+        // data: param,
+        method:"GET"
     });
 };
 
 export const submitOrder = (filePath, formData) => {
+    
     return Taro.uploadFile({
         url: serverHost + base + '/submit', //仅为示例，非真实的接口地址
         filePath,
@@ -29,6 +31,10 @@ export const submitOrder = (filePath, formData) => {
             "Content-Type":'application/x-www-form-urlencoded',
             token:Taro.getStorageSync(userToken)||''
           },
+        fail(err){
+            Taro.hideLoading()
+            Taro.showToast({title:'服务器连接出错',icon:'none'})
+        }
         // success (res){
         //   const data = res.data
         //   //do something

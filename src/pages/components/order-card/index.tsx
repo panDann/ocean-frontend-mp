@@ -4,28 +4,38 @@ import MButton from '@src/pages/components/btn'
 import { ITouchEvent } from "@tarojs/components/types/common";
 import "./index.styl";
 
+const statusMap = new Map([
+    ['waiting', { color: 'order-status-waiting', label: '待接单' }],
+    ['repairing', { color: 'order-status-repairing', label: '正在维修' }],
+    ['finished', { color: 'order-status-success', label: '维修完成' }],]
+)
+
+
 export default function Index({ item: {
     name = '',
     status = '',
-    img = '',
+    beforeImg = '',
     price = 0,
-    time = '', },
+    createTime = '', },
     operator
 }) {
 
+    const statusTip = statusMap.get(status)
+    console.log(beforeImg);
+    
     return (
         <View className='card' onClick={onProxy}>
             <View className='flex-row justify-between bottom-line'>
                 <Text className='order-name'>{name}</Text>
-                {status ? <Text className='order-status order-status-success'>维修完成</Text> : <Text className='order-status order-status-repairing'>正在维修</Text>}
+                <Text className={`order-status ${statusTip.color}`}>{statusTip.label}</Text>
             </View>
             <View className='flex-row padding1rem bottom-line justify-between'>
-                <Image className='order-img' src={img} id={'clientImg' + img} />
+                <Image className='order-img' src={'data:image/png;base64,'+ beforeImg} id={'clientImg' + beforeImg} />
                 <Text className='order-price'><Text className='order-unit'>￥</Text>{price}</Text>
             </View>
             <View className='flex-row bottom justify-between'>
-                <Text className='order-time'>{time}</Text>
-                {!status && <MButton type='flat' onClick={operator}>催单</MButton>}
+                <Text className='order-time'>{createTime}</Text>
+                {status !='finished' && <MButton type='flat' onClick={operator}>催单</MButton>}
             </View>
         </View>
     )
