@@ -2,7 +2,9 @@
 @import '~@src/styles/flex'
 
 $topFontSize = 1.5rem
-
+quarter(a)
+    a / 5
+    
 .card 
     padding: 1rem
     background: $cardBgColor
@@ -19,7 +21,7 @@ $topFontSize = 1.5rem
 .order-name::before
     content ''
     position absolute
-    top: 15%
+    top: quarter($topFontSize)
     left 0
     bottom: 0
     width .2rem 

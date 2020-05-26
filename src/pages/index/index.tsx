@@ -78,8 +78,6 @@ export default class Index extends Component<any, State> {
     if (data) {
       if (isFresh) listData = data
       else listData.push(data)
-      console.log
-      (listData)
       this.setState({ listData })
     }
   }
