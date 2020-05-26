@@ -7,12 +7,13 @@ import NoDataPath from '@src/assets/images/no-data.png'
 import Modal from '@src/pages/components/modal'
 import {
   getOrders,
+  deleteOrder,
   submitOrder
 } from '@src/api/order';
 const phoneNumber = '13476828808'
 
 interface State {
-  current1: number;
+  showBtn: boolean;
   listData: any;
   modaleVisible: boolean
   temImgPath: string
@@ -28,12 +29,15 @@ interface State {
 }
 
 let page = 1,
-  limit = 10
+  limit = 10,
+  scrollIndex = 0,
+  scrollTimer: any,
+  $toast: any = (title) => Taro.showToast({ title })
 export default class Index extends Component<any, State> {
   constructor() {
     super();
     this.state = {
-      current1: 0,
+      showBtn: true,
       modaleVisible: false,
       temImgPath: '',
       form: {
@@ -57,7 +61,9 @@ export default class Index extends Component<any, State> {
     };
   }
 
-  componentDidMount() {
+  componentWillUnmount() {
+    scrollTimer = null
+    $toast = null
   }
   componentWillMount() {
     this.getData(true)
@@ -68,38 +74,42 @@ export default class Index extends Component<any, State> {
     enablePullDownRefresh: true
   };
 
-  handleClick(current1) {
 
-  }
   async getData(isFresh = false) {
     let { data: { data } } = await getOrders(page, limit)
-   
+
     let { listData } = this.state
     if (data) {
       if (isFresh) listData = data
       else listData.push(data)
       this.setState({ listData })
+    }else {
+      this.setState({ listData:[] })
     }
   }
   onPullDownRefresh() {
     page = 1
     this.getData(true)
   }
-  hiddenModal() {
+  onPageScroll({ scrollTop }) {
+    if (scrollTimer) clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      if (scrollIndex - scrollTop > 0 || scrollTop == 0) {
+        this.setState({ showBtn: true })
+      } else {
+        this.setState({ showBtn: false })
+      }
+      scrollIndex = scrollTop
+    }, 100);
 
-    this.setState({ modaleVisible: false })
   }
   onFormName({ detail: { value } }) {
     const { form } = this.state
     form.name = value
-
   }
   async chooseImg() {
     const { tempFilePaths: [temImgPath = ''] } = await Taro.chooseImage({ count: 1 })
     this.setState({ temImgPath })
-
-    // if(temImgPath) {
-    // }
   }
   async submitForm() {
     const { form, temImgPath } = this.state
@@ -109,29 +119,52 @@ export default class Index extends Component<any, State> {
 
     let parseData = JSON.parse(data)
     if (parseData.code === 10000) {
-      Taro.showToast({ title: '上传成功' })
+      $toast('上传成功')
+      this.setState({modaleVisible:false})
+      this.onPullDownRefresh()
       return
     }
     Taro.showToast({ title: parseData.message, icon: 'none' })
+  }
+  onOperate(id: number, type: string) {
+    switch (type) {
+      case 'reminder': this.onOrderReminder(id)
+        break
+      case 'cancel': this.onOrderCancel(id)
+        break
+      default: break
+    }
+  }
+  onOrderReminder(id: number) {
 
+    $toast('催单成功')
+  }
+  onOrderCancel(id: number) {
+    Taro.showModal({
+      title: '取消订单', success: async () => {
+         await deleteOrder(id)
+          $toast('删除成功')
+          this.getData(true)
+      }
+    })
   }
   render() {
-    const { listData, form, temImgPath, modaleVisible } = this.state
+    const { listData, showBtn, form, temImgPath, modaleVisible } = this.state
 
     return (
       <View className="padding1rem">
         {
-          listData.map(el => <OrderCard item={el} operator={this.handleClick} />)
+          listData.map(el => <OrderCard item={el} operator={this.onOperate.bind(this)} />)
         }
 
         {!listData.length && <NoData tip='暂时没有您的订单' />}
 
-        <View className='btn-con'>
+        {showBtn && <View className='btn-con'>
           <View className='iconfont tran-scale float-btn icondkw_tianxie' onClick={() => this.setState({ modaleVisible: !modaleVisible })} />
           <View className='iconfont tran-scale float-btn iconphone' onClick={() => Taro.makePhoneCall({ phoneNumber })} />
-        </View>
+        </View>}
 
-        <Modal title='创建订单' width='80vw' onConfirm={this.submitForm.bind(this)} height='50vh' visible={modaleVisible} onCancel={this.hiddenModal.bind(this)}>
+        <Modal title='创建订单' width='80vw' onConfirm={this.submitForm.bind(this)} height='50vh' visible={modaleVisible} onCancel={() => this.setState({ modaleVisible: false })}>
           <View className='padding1rem'>
             <View className='flex-row paddingtb1rem justify-start'>
               <Text className='label'>订单名：</Text>

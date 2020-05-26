@@ -9,17 +9,17 @@ const statusMap = new Map([
     ['repairing', { color: 'order-status-repairing', label: '正在维修' }],
     ['finished', { color: 'order-status-success', label: '维修完成' }],]
 )
-
-
 export default function Index({ item: {
     name = '',
+    id = '',
     status = '',
     beforeImg = '',
     price = 0,
     createTime , },
     operator
 }) {
-    base64ToUrl(beforeImg)
+    // base64ToUrl(beforeImg)
+    // temId = +id
     const statusTip = statusMap.get(status)
     const temCreateTime = createTime.replace(/(T|Z)/g,' ')
     return (
@@ -34,7 +34,10 @@ export default function Index({ item: {
             </View>
             <View className='flex-row bottom justify-between'>
                 <Text className='order-time'>{temCreateTime}</Text>
-                {status !='finished' && <MButton type='flat' onClick={operator}>催单</MButton>}
+                <View className='flex-row justify-between'>
+                {status !='finished' && <MButton type='flat'  onClick={()=>operator(id,'reminder')}>催单</MButton>}
+                {status =='waiting' && <MButton type='warning'  onClick={()=>operator(id,'cancel')}>取消</MButton>}
+                </View>
             </View>
         </View>
     )
@@ -45,7 +48,10 @@ function onProxy({ target: { id } }: ITouchEvent) {
     if (id.includes('Img')) {
         const [invalid, current] = id.split('Img')
         Taro.previewImage({ current, urls: [current] })
+        return
     }
+    
+    
     return
 
 }

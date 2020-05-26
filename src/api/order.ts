@@ -11,10 +11,10 @@ export interface ILogin {
 }
 
 
-let base = '/ocean-mp/user-order'
+let base = '/ocean-mp/user/order'
 export const getOrders = (page=1,limit=10) => {
     return Request({
-        url: base + `/query?page=${page}&limit=${limit}`,
+        url: base + `?page=${page}&limit=${limit}`,
         // data: param,
         method:"GET"
     });
@@ -23,7 +23,7 @@ export const getOrders = (page=1,limit=10) => {
 export const submitOrder = (filePath, formData) => {
     
     return Taro.uploadFile({
-        url: serverHost + base + '/submit', //仅为示例，非真实的接口地址
+        url: serverHost + base , //仅为示例，非真实的接口地址
         filePath,
         name: 'file',
         formData,
@@ -40,6 +40,13 @@ export const submitOrder = (filePath, formData) => {
         //   //do something
         // }
     })
+};
+export const deleteOrder = (id) => {
+    return Request({
+        url: base+`?id=${id}`,
+        // data: {id},
+        method:"DELETE"
+    });
 };
 
 
