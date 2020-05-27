@@ -36,16 +36,6 @@ export default class Index extends Component<any, State> {
     };
   }
 
-
-
-
-  // componentDidMount() {
-  // }
-
-  // async componentWillMount() {
-  
-  // }
-
   config: Config = {
     navigationBarTitleText: "个人中心"
   };

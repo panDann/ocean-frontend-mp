@@ -30,7 +30,7 @@ export default function Index({ item: {
             </View>
             <View className='flex-row padding1rem bottom-line justify-between'>
                 <Image className='order-img' src={'data:image/png;base64,'+ beforeImg} id={'clientImg' + beforeImg} />
-                <Text className='order-price'><Text className='order-unit'>￥</Text>{price}</Text>
+                <Text className='order-price'><Text className='order-unit'>￥</Text>{price||'-'}</Text>
             </View>
             <View className='flex-row bottom justify-between'>
                 <Text className='order-time'>{temCreateTime}</Text>

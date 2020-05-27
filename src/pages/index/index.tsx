@@ -1,9 +1,10 @@
 import Taro, { Component, Config } from "@tarojs/taro";
-import { View, Text, Input, Image, Button, CoverView } from "@tarojs/components";
+import { View, Text, Input, Image, CoverView } from "@tarojs/components";
 import OrderCard from '@src/pages/components/order-card'
 import NoData from "@src/pages/components/no-data";
 import "./index.styl";
-import NoDataPath from '@src/assets/images/no-data.png'
+import { userToken } from "@src/consts/localStorage-variables";
+import {minePath} from '@src/consts/paths.ts'
 import Modal from '@src/pages/components/modal'
 import {
   getOrders,
@@ -22,17 +23,13 @@ interface State {
     before_img: string
     status: number
   }
-  origin: string;
-  destination: string;
-  searchOrigin: string;
-  searchDestination: string;
 }
 
 let page = 1,
   limit = 10,
   scrollIndex = 0,
   scrollTimer: any,
-  $toast: any = (title) => Taro.showToast({ title })
+  $toast: any = (title,icon='success') => Taro.showToast({ title,icon })
 export default class Index extends Component<any, State> {
   constructor() {
     super();
@@ -46,18 +43,9 @@ export default class Index extends Component<any, State> {
         status: 0,
       },
       listData: [
-        // {
-        //   name: 'test',
-        //   status: 0,
-        //   img: NoDataPath,
-        //   price: 12,
-        //   time: '2019-09-03 19:00',
-        // }
+
       ],
-      origin: "",
-      destination: "",
-      searchOrigin: "",
-      searchDestination: ""
+
     };
   }
 
@@ -66,30 +54,44 @@ export default class Index extends Component<any, State> {
     $toast = null
   }
   componentWillMount() {
-    this.getData(true)
+    this.getData(1)
   }
 
   config: Config = {
     navigationBarTitleText: "首页",
-    enablePullDownRefresh: true
+    enablePullDownRefresh: true,
+    
   };
 
-
-  async getData(isFresh = false) {
-    let { data: { data } } = await getOrders(page, limit)
+  async getData(p = 1) {
+    let { data: { data } } = await getOrders(p, limit)
 
     let { listData } = this.state
     if (data) {
-      if (isFresh) listData = data
+      if (p == 1) listData = data
       else listData.push(data)
       this.setState({ listData })
-    }else {
-      this.setState({ listData:[] })
+    } else {
+      this.setState({ listData: [] })
     }
   }
   onPullDownRefresh() {
     page = 1
-    this.getData(true)
+    this.getData(page)
+  }
+  authLogin() {
+    if(Taro.getStorageSync(userToken)){
+      this.setState({ modaleVisible:true  })
+      return
+    }
+    Taro.showModal({
+      title: '您还未登录，是否去登录？', success: ({ confirm }) => {
+        confirm && Taro.switchTab({url:minePath})
+      },
+      confirmText:'去登录'
+    })
+    return
+
   }
   onPageScroll({ scrollTop }) {
     if (scrollTimer) clearTimeout(scrollTimer);
@@ -103,16 +105,18 @@ export default class Index extends Component<any, State> {
     }, 100);
 
   }
-  onFormName({ detail: { value } }) {
-    const { form } = this.state
-    form.name = value
-  }
+
   async chooseImg() {
     const { tempFilePaths: [temImgPath = ''] } = await Taro.chooseImage({ count: 1 })
     this.setState({ temImgPath })
   }
   async submitForm() {
     const { form, temImgPath } = this.state
+    if(!form.name || !temImgPath){
+    $toast('订单名和图不能为空','none' )
+    return
+    }
+
     Taro.showLoading({ title: '文件上传中' })
     const { data } = await submitOrder(temImgPath, form)
     Taro.hideLoading()
@@ -120,12 +124,13 @@ export default class Index extends Component<any, State> {
     let parseData = JSON.parse(data)
     if (parseData.code === 10000) {
       $toast('上传成功')
-      this.setState({modaleVisible:false})
+      this.setState({ modaleVisible: false })
       this.onPullDownRefresh()
       return
     }
-    Taro.showToast({ title: parseData.message, icon: 'none' })
+    $toast(parseData.message,'none' )
   }
+ 
   onOperate(id: number, type: string) {
     switch (type) {
       case 'reminder': this.onOrderReminder(id)
@@ -141,11 +146,13 @@ export default class Index extends Component<any, State> {
   }
   onOrderCancel(id: number) {
     Taro.showModal({
-      title: '取消订单', success: async () => {
-         await deleteOrder(id)
-          $toast('删除成功')
-          this.getData(true)
-      }
+      title: '取消订单', success: async ({ confirm }) => {
+        confirm && (
+                    await deleteOrder(id),
+                    $toast('删除成功'),
+                     this.getData(1)
+                   )
+      },
     })
   }
   render() {
@@ -160,7 +167,7 @@ export default class Index extends Component<any, State> {
         {!listData.length && <NoData tip='暂时没有您的订单' />}
 
         {showBtn && <View className='btn-con'>
-          <View className='iconfont tran-scale float-btn icondkw_tianxie' onClick={() => this.setState({ modaleVisible: !modaleVisible })} />
+          <View className='iconfont tran-scale float-btn icondkw_tianxie' onClick={this.authLogin.bind(this)} />
           <View className='iconfont tran-scale float-btn iconphone' onClick={() => Taro.makePhoneCall({ phoneNumber })} />
         </View>}
 
@@ -173,7 +180,7 @@ export default class Index extends Component<any, State> {
                 placeholder='输入机型和问题，限10字'
                 placeholderClass='placeholder'
                 className='form-input bottom-line'
-                onInput={this.onFormName} />
+                onInput={({ detail: { value } }) => form.name = value} />
             </View>
             <View className='flex-row paddingtb1rem justify-start'>
               <Text className='label'>外观图：</Text>
@@ -184,7 +191,6 @@ export default class Index extends Component<any, State> {
               }
             </View>
           </View>
-          {/* <Button className='primary-btn btn absolute mini-btn'>提交</Button> */}
         </Modal>
       </View>
     );
